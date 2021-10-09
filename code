@@ -1,0 +1,47 @@
+#importing dataset file
+library(readr)
+hcare<- read.csv("hospitalcosts.csv")
+class(hcare)
+
+summary(hcare)
+
+hist(hcare$AGE, main = "histogram of age freq", xlab= "age group", ylab = "frequency of patients", prob= TRUE, col = "blue")
+
+lines(density(hcare$AGE))
+
+summary(as.factor(hcare$AGE))
+
+x<- aggregate(TOTCHG~AGE, FUN = sum,data = hcare)
+
+x
+
+max(x)
+
+which.max(summary(as.factor(hcare$APRDRG)))
+diagnosiscost<-aggregate(TOTCHG~APRDRG,FUN=sum,data=hcare)
+diagnosiscost
+diagnosiscost [which.max(diagnosiscost$TOTCHG),]
+
+
+summary(as.factor(hcare$RACE))
+head(hcare)
+hcare<-na.omit(hcare)
+hcare$RACE<-as.factor(hcare$RACE)
+mod<-aov(TOTCHG ~ RACE,data=hcare)
+mod
+summary(mod)
+summary(hcare$RACE)
+
+model1<-lm(TOTCHG~AGE+FEMALE,data = hcare)
+hcare$FEMALE<-as.factor(hcare$FEMALE)
+model1<-lm(TOTCHG~AGE+FEMALE, data = hcare)
+summary(model1)
+summary(hcare$FEMALE)
+head(hcare)
+
+hcare$RACE<-as.factor(hcare$RACE)
+model2<-lm(TOTCHG~AGE+FEMALE+RACE,data = hcare)
+summary(model2)
+
+model3<-lm(TOTCHG~.,data = hcare)
+summary(model3)
